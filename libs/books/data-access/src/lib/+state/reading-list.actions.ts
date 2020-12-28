@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import { Book, ReadingListItem } from '@tmo/shared/models';
 
-export const init = createAction('[Reading List] Initialize');
+export const loadReadingList = createAction('[Reading List] Load list');
 
 export const loadReadingListSuccess = createAction(
   '[Reading List API] Load list success',
@@ -22,6 +22,11 @@ export const failedAddToReadingList = createAction(
   props<{ book: Book }>()
 );
 
+export const undoAddToReadingList = createAction(
+  '[Reading List] Undo add to list',
+  props<{ book: Book }>()
+);
+
 export const confirmedAddToReadingList = createAction(
   '[Reading List API] Confirmed add to list',
   props<{ book: Book }>()
@@ -29,6 +34,11 @@ export const confirmedAddToReadingList = createAction(
 
 export const removeFromReadingList = createAction(
   '[Books Search Results] Remove from list',
+  props<{ item: ReadingListItem }>()
+);
+
+export const undoRemoveFromReadingList = createAction(
+  '[Reading List] Undo remove from list',
   props<{ item: ReadingListItem }>()
 );
 
