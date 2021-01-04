@@ -4,8 +4,11 @@ import { Store } from '@ngrx/store';
 import {
   getReadingList,
   removeFromReadingList,
-  undoRemoveFromReadingList
+  undoRemoveFromReadingList,
+  toggleMarkedAsRead,
+  undoToggledMarkedAsRead
 } from '@tmo/books/data-access';
+import { ReadingListItem } from '@tmo/shared/models';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -18,20 +21,20 @@ export class ReadingListComponent {
 
   constructor(private readonly store: Store, private snackbar: MatSnackBar) {}
 
-  onRemovedFromReadingList(item) {
+  onRemovedFromReadingList(item:ReadingListItem) {
     this.store.dispatch(removeFromReadingList({ item }));
+  }
+    onToggledMarkedAsRead(item: ReadingListItem) {
+      const readStatus = item.finished ? 'unread' : 'read';
+      const message = `${item.title} marked as ${readStatus}`;
+      this.store.dispatch(toggleMarkedAsRead({ item }));
   
-  const snackBarRef = this.snackbar.open(
-    `${item.title} removed from your reading list!`,
-    'Undo',
-    { duration: 5000 }
-  );
+      const snackBarRef = this.snackbar.open(message, 'Undo', { duration: 5000 });
 
   snackBarRef
     .onAction()
     .pipe(take(1))
     .subscribe(() =>
-      this.store.dispatch(undoRemoveFromReadingList({ item }))
-    );
+      this.store.dispatch(undoRemoveFromReadingList({ item })));
 }
 }
